@@ -16,8 +16,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.decomposition import PCA
 from sklearn.decomposition import KernelPCA
-from sklearn.manifold import LocallyLinearEmbedding
-from sklearn.manifold import Isomap
 
 class RGBBCRobot(RobotPolicy):
 
@@ -34,9 +32,7 @@ class RGBBCRobot(RobotPolicy):
         y_flatten = np.ravel(y)
 
         # self.transformer = KernelPCA(n_components=24, kernel='linear')
-        self.transformer = MDS(n_components=6)
-        # self.transformer = LocallyLinearEmbedding(n_components=8)
-        # self.transformer = Isomap(n_components=2)
+        self.transformer = MDS(n_components=2)
         X_transformed = self.transformer.fit_transform(X)
         
 
@@ -62,7 +58,7 @@ class RGBBCRobot(RobotPolicy):
 
     def get_actions(self, observations):
         # print(observations.shape)
-        observations = observations.reshape((6, 2048))
+        observations = observations.reshape((2, 6144))
         observations = self.transformer.fit_transform(observations)
         prediction = self.clf.predict(observations)
         return prediction

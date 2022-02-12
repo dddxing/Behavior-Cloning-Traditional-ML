@@ -12,9 +12,7 @@ class PositionRegressor(Regressor):
         self.clf = 0
 
     def train(self, data):
-        # for key, val in data.items():
-        #     print(key, val)
-        # print("Using dummy solution for PositionRegressor")
+
         obs = data["obs"]
         info = data["info"]
         pos = np.array([a["agent_pos"] for a in info])

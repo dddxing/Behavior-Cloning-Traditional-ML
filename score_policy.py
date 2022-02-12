@@ -15,13 +15,14 @@ def test_model(policy, n_test=20, gui_enable=False, img_obs=False):
 
     max_dists = np.linalg.norm(goal - init_pos)
     min_dists = []
-    for _ in range(n_test):
+    for i in range(n_test): # DMX added
         env = SimpleMaze(gui_enabled=gui_enable, img_obs=img_obs)
         obs = env.reset()
-
+        print(f" i= {i}")        # DMX added
         done = False
         positions = []
         for step in range(100):
+            # print(f"step={step}")   # DMX added
             obs =  np.reshape(obs, newshape=[1, -1])
             act = policy.get_actions(obs)[0]
             obs, _, done, info = env.step(act)
@@ -40,7 +41,7 @@ def test_model(policy, n_test=20, gui_enable=False, img_obs=False):
 
     score = (max_dists - mean_min_dist) / max_dists
     score = min(max(0., score), 1.)
-
+    print(f"score = {score}")
     # compute the actual score for grading
     if img_obs:
         if score >= 0.99:
@@ -68,7 +69,7 @@ def score_position_bc(gui_enable=False):
     policy = POSBCRobot()
     data = load_data('./data/bc_with_gtpos_data.pkl')
     policy.train(data)
-    _, _, score = test_model(policy, n_test=20, gui_enable=gui_enable, img_obs=False)
+    _, _, score = test_model(policy, n_test=20, gui_enable=gui_enable, img_obs=False)   
     return score
 
 
@@ -77,7 +78,7 @@ def score_img_bc(gui_enable=False):
     policy = RGBBCRobot()
     data = load_data('./data/bc_data.pkl')
     policy.train(data)
-    _, _, score = test_model(policy, n_test=20,  gui_enable=gui_enable, img_obs=True)
+    _, _, score = test_model(policy, n_test=20,  gui_enable=gui_enable, img_obs=True)   
     return score
 
 
@@ -106,8 +107,8 @@ def score_regressor():
     test_mse_dist = (mse - target_mse)
     test_score = 1. - mse_dist
     test_score = min(max(0., score), 1.)
-    print('train_mse:', mse)
-    print('test_mse:', test_mse)
+    # print('train_mse:', mse)
+    # print('test_mse:', test_mse)
     score = 0.5 * score + 0.5 * test_score
     # compute actual score for grading
     if score >= 0.99:
